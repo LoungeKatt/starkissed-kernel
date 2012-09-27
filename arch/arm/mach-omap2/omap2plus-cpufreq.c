@@ -76,6 +76,10 @@ static int oc_val;
 extern bool lmf_screen_state;
 #endif
 
+#ifdef CONFIG_CPU_FREQ_GOV_INTELLIDEMAND
+extern bool lmf_screen_state;
+#endif
+
 static unsigned int omap_getspeed(unsigned int cpu)
 {
 	unsigned long rate;
