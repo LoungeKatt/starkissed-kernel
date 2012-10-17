@@ -286,7 +286,7 @@ static void tuna_set_vbus_drive(bool enable)
     /*
      * KEF -  10/15/12:  Added code to original function such that if
      *                   a voltage is detected on the bus (VBUS), rather
-     #                   than go to boost mode (VBUS Drive), we take
+     *                   than go to boost mode (VBUS Drive), we take
      *                   power from the charger attached to the bus.
      *                   Otherwise, we go into boost mode as in the
      *                   original code.
@@ -294,7 +294,7 @@ static void tuna_set_vbus_drive(bool enable)
      *                   On disable, if we were powered by an external
      *                   charger on VBUS, turn off this mode.  Otherwise,
      *                   we were in boost mode, so disable that.
-     *              
+     *
      *                   The code for enabling and disabling charging was
      *                   taken from tuna_otg_pogo_charger().  The original
      *                   mod to comment out the boost code and enable
@@ -303,7 +303,7 @@ static void tuna_set_vbus_drive(bool enable)
      *
      *                   http://rootzwiki.com/topic/30615-can-you-
      *                              charge-usb-host-mode-simultaneously/
-     *                  
+     *
      *                   Kernel based on this mod is called JourneymanMod
      *                   kernel.
      */
@@ -472,7 +472,6 @@ static bool tuna_otg_vbus_present(void)
 
 	return !!(vbus_state & TWL_STAT1_VBUS_DET);
 }
-
 */
 
 static void tuna_fsa_usb_detected(int device)
