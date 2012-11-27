@@ -215,6 +215,13 @@ config CPU_FREQ_DEFAULT_GOV_INTELLIDEMAND
 	  Use the CPUFreq governor 'intellidemand' as default. This is
 	  based on Ondemand with browsing detection based on GPU loading
 
+config CPU_FREQ_DEFAULT_GOV_INTELLIDEMANDX
+	bool "intellidemandX"
+	select CPU_FREQ_GOV_INTELLIDEMANDX
+	help
+	  Use the CPUFreq governor 'intellidemandX' as default. This is
+	  based on Ondemand with browsing detection based on GPU loading
+
 config CPU_FREQ_DEFAULT_GOV_ADAPTIVE
 	bool "adaptive"
 	select CPU_FREQ_GOV_ADAPTIVE
@@ -621,6 +628,13 @@ config CPU_FREQ_GOV_INTELLIDEMAND
           For details, take a look at linux/Documentation/cpu-freq.
 
           If in doubt, say N.
+
+config CPU_FREQ_GOV_INTELLIDEMANDX
+        tristate "'intellidemandX' cpufreq governor"
+        depends on CPU_FREQ
+        help
+          'intellidemandx' - an intelligent ondemand governor with
+	  early suspend/wake code and CPU hotplugging.
 
 config INTELLI_MAX_ACTIVE_FREQ
 	int "Max Active Freq for Intellidemand"
