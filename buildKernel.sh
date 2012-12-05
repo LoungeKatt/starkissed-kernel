@@ -48,7 +48,7 @@ make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 
 if [ -e arch/arm/boot/zImage ]; then
 
-cp .config arch/arm/configs/francoair_defconfig
+cp -R .config arch/arm/configs/francoair_defconfig
 
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
