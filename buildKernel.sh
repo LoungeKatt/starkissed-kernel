@@ -34,7 +34,7 @@ else
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
 fi
 
-zipfile=$HANDLE"_francoAIR-384GPU.zip"
+zipfile=$HANDLE"_francoAIR-JB42X.zip"
 
 CPU_JOB_NUM=16
 
