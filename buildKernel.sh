@@ -55,7 +55,7 @@ cp -R arch/arm/boot/zImage $MKBOOTIMG
 cd $MKBOOTIMG
 ./img.sh
 
-echo "making zip file"
+echo "building kernel package"
 cp -R boot.img ../francoAIR
 cd ../francoAIR
 rm *.zip

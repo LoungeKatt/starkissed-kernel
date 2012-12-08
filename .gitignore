@@ -81,8 +81,7 @@ GTAGS
 \#*#
 arch/arm/boot/compressed/ashldi3.S
 arch/arm/boot/compressed/piggy.xzkern
+
+zImage
 boot.img
-buildlean.sh
-mkboot/
-zip/
-drivers/net/wireless/bcmdhd_bk/
+TwistedZero_francoAIR-JB42X.zip
