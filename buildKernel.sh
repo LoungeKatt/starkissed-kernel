@@ -46,12 +46,17 @@ make clean -j$CPU_JOB_NUM
 
 make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 
-find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
-
 if [ -e arch/arm/boot/zImage ]; then
 
 cp -R .config arch/arm/configs/francoair_defconfig
 
+if [ `find . -name "*.ko"` ]; then
+
+find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
+
+if [ ! -e $KERNELSPEC/francoAIR/system ]; then
+mkdir $KERNELSPEC/francoAIR/system
+fi
 if [ ! -e $KERNELSPEC/francoAIR/system/lib ]; then
 mkdir $KERNELSPEC/francoAIR/system/lib
 fi
@@ -65,6 +70,8 @@ fi
 for j in $(find . -name "*.ko"); do
 cp -R "${j}" $KERNELSPEC/francoAIR/system/lib/modules
 done
+
+fi
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
 cd $MKBOOTIMG
