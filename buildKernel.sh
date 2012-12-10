@@ -34,7 +34,7 @@ else
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
 fi
 
-zipfile=$HANDLE"_StarKist-JB42X.zip"
+zipfile=$HANDLE"_StarKissed-JB42X.zip"
 
 CPU_JOB_NUM=16
 
@@ -48,7 +48,7 @@ make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 
 if [ -e arch/arm/boot/zImage ]; then
 
-cp -R .config arch/arm/configs/starkist_defconfig
+cp -R .config arch/arm/configs/starkissed_defconfig
 
 if [ `find . -name "*.ko"` ]; then
 
