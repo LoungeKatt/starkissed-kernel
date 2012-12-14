@@ -50,7 +50,7 @@ if [ -e arch/arm/boot/zImage ]; then
 
 cp -R .config arch/arm/configs/starkissed_defconfig
 
-if [ `find . -name "*.ko"` ]; then
+if [ `find . -name "*.ko" | grep -c ko` > 0 ]; then
 
 find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
 
