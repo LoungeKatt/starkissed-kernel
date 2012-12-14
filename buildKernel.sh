@@ -71,6 +71,12 @@ for j in $(find . -name "*.ko"); do
 cp -R "${j}" $KERNELSPEC/francoAIR/system/lib/modules
 done
 
+else
+
+if [ -e $KERNELSPEC/francoAIR/system/lib ]; then
+rm -r $KERNELSPEC/francoAIR/system/lib
+fi
+
 fi
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
