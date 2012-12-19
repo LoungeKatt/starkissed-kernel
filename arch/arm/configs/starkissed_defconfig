@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Linux/arm 3.0.54 Kernel Configuration
+# Linux/arm 3.0.57 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_HAVE_PWM=y
@@ -339,6 +339,7 @@ CONFIG_OMAP_TPS6236X=y
 CONFIG_OMAP_ALLOW_OSWR=y
 CONFIG_OMAP_FIQ_DEBUGGER=y
 CONFIG_OMAP4_PPA_CPU1_ONLINE_BUG=y
+CONFIG_OMAP_SCREENOFF_MAXFREQ=y
 CONFIG_FORCE_FAST_CHARGE=y
 # CONFIG_RQ_STATS is not set
 
@@ -1279,6 +1280,7 @@ CONFIG_BCMDHD_FW_PATH="/system/vendor/firmware/fw_bcmdhd.bin"
 CONFIG_BCMDHD_NVRAM_PATH="/system/etc/wifi/bcmdhd.cal"
 # CONFIG_DHD_USE_STATIC_BUF is not set
 # CONFIG_DHD_USE_SCHED_SCAN is not set
+CONFIG_DHD_ENABLE_P2P=y
 # CONFIG_HOSTAP is not set
 # CONFIG_IWM is not set
 # CONFIG_LIBERTAS is not set
@@ -2066,7 +2068,6 @@ CONFIG_USB_STORAGE=y
 # CONFIG_USB_STORAGE_KARMA is not set
 # CONFIG_USB_STORAGE_CYPRESS_ATACB is not set
 # CONFIG_USB_STORAGE_ENE_UB6250 is not set
-# CONFIG_USB_UAS is not set
 # CONFIG_USB_LIBUSUAL is not set
 
 #
