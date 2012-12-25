@@ -44,6 +44,28 @@ CONFIG_OMAP4_DUTY_CYCLE=y
 # CONFIG_OMAP_DIE_GOVERNOR is not set
 
 #
+# Boot logo and Framebuffer
+#
+CONFIG_CMDLINE="console=ttyS0,115200 androidboot.console=ttyS0 fbcon=rotate:0 mem=1G vmalloc=768M zcache omap_wdt.timer_margin=60 no_console_suspend"
+CONFIG_BOOT_PRINTK_DELAY=y
+CONFIG_CMDLINE_FORCE=y
+CONFIG_CMDLINE_EXTEND=y
+CONFIG_VT=y
+CONFIG_DUMMY_CONSOLE=y
+CONFIG_LOGO=y
+# CONFIG_LOGO_LINUX_VGA16 is not set
+CONFIG_LOGO_LINUX_CLUT224=y
+# CONFIG_LOGO_LINUX_MONO is not set
+CONFIG_FRAMEBUFFER_CONSOLE=y
+CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
+# CONFIG_FRAMEBUFFER_CONSOLE_ROTATION is not set
+# CONFIG_FONTS is not set
+# CONFIG_FONT_4x6 is not set
+# CONFIG_FONT_6x11 is not set
+# CONFIG_FONT_8x8 is not set
+# CONFIG_FONT_8x16 is not set
+
+#
 # General setup
 #
 CONFIG_EXPERIMENTAL=y
