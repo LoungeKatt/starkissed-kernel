@@ -390,6 +390,9 @@ extern struct cpufreq_governor cpufreq_gov_pegasusq;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIDEMAND)
 extern struct cpufreq_governor cpufreq_gov_intellidemand;
 #define CPUFREQ_DEFAULT_GOVERNOR  (&cpufreq_gov_intellidemand)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIDEMANDX)
+extern struct cpufreq_governor cpufreq_gov_intellidemandx;
+#define CPUFREQ_DEFAULT_GOVERNOR  (&cpufreq_gov_intellidemandx)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ADAPTIVE)
 extern struct cpufreq_governor cpufreq_gov_adaptive;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_adaptive)
@@ -405,6 +408,30 @@ extern struct cpufreq_governor cpufreq_gov_fantasy;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTASS2)
 extern struct cpufreq_governor cpufreq_gov_smartass2;
 #define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_smartass2)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_BRAZILIANWAX)
+extern struct cpufreq_governor cpufreq_gov_brazilianwax;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_brazilianwax)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_KTOONSERVATIVE)
+extern struct cpufreq_governor cpufreq_gov_ktoonservative;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_ktoonservative)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIONHEART)
+extern struct cpufreq_governor cpufreq_gov_lionheart;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_lionheart)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SKYWALKER)
+extern struct cpufreq_governor cpufreq_gov_skywalker;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_skywalker)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SLEEPY)
+extern struct cpufreq_governor cpufreq_gov_sleepy;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_sleepy)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_HYPER)
+extern struct cpufreq_governor cpufreq_gov_hyper;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_hyper)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SCARY)
+extern struct cpufreq_governor cpufreq_gov_scary;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_scary)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_NIGHTMARE)
+extern struct cpufreq_governor cpufreq_gov_nightmare;
+#define CPUFREQ_DEFAULT_GOVERNOR	(&cpufreq_gov_nightmare)
 #endif
 
 
