@@ -291,16 +291,16 @@ static int hotplug_freq[4][2] = {
 	{500000, 0}
 };
 #else
-#ifdef CONFIG_CPU_OMAP4460
+#ifdef CONFIG_MACH_TUNA
 static int hotplug_rq[4][2] = {
-	{0, 350}, {350, 200}, {200, 300}, {300, 0}
+	{0, 100}, {100, 200}, {200, 300}, {300, 0}
 };
 
 static int hotplug_freq[4][2] = {
-	{0, 500000},
-	{400000, 500000},
-	{200000, 500000},
-	{200000, 0}
+	{0, 720000},
+	{350000, 720000},
+	{350000, 720000},
+	{350000, 0}
 };
 #else
 static int hotplug_rq[4][2] = {
