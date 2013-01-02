@@ -36,7 +36,7 @@ fi
 
 zipfile=$HANDLE"_StarKissed-JB42X.zip"
 
-CPU_JOB_NUM=4
+CPU_JOB_NUM=8
 
 cd $KERNELSPEC
 
