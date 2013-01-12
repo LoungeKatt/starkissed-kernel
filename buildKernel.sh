@@ -90,4 +90,7 @@ rm *.zip
 zip -r $zipfile *
 cp -R $KERNELSPEC/francoAIR/$zipfile $KERNELREPO/$zipfile
 
+cd $KERNELSPEC
+git commit -a -m "Compile success: Update build configuration defaults"
+
 fi
