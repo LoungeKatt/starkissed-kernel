@@ -179,15 +179,15 @@ static unsigned int get_nr_run_avg(void)
 #define DEF_FREQ_UP_BRAKE				(5u)
 #define DEF_HOTPLUG_COMPARE_LEVEL		(0u)
 
-#ifdef CONFIG_MACH_MIDAS
+#ifdef CONFIG_MACH_TUNA
 static int hotplug_rq[4][2] = {
 	{0, 100}, {100, 200}, {200, 300}, {300, 0}
 };
 
 static int hotplug_freq[4][2] = {
-	{0, 598000},
-	{364000, 598000},
-	{364000, 598000},
+	{0, 702000},
+	{364000, 702000},
+	{364000, 702000},
 	{364000, 0}
 };
 #else

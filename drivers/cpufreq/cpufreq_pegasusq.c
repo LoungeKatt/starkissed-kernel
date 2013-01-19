@@ -180,15 +180,15 @@ static unsigned int get_nr_run_avg(void)
 #define HOTPLUG_DOWN_INDEX			(0)
 #define HOTPLUG_UP_INDEX			(1)
 
-#ifdef CONFIG_MACH_MIDAS
+#ifdef CONFIG_MACH_TUNA
 static int hotplug_rq[4][2] = {
 	{0, 100}, {100, 200}, {200, 300}, {300, 0}
 };
 
 static int hotplug_freq[4][2] = {
-	{0, 598000},
-	{364000, 598000},
-	{364000, 598000},
+	{0, 702000},
+	{364000, 702000},
+	{364000, 702000},
 	{364000, 0}
 };
 #else
