@@ -9,7 +9,7 @@ PROPER=`echo $2 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 if cat /etc/issue | grep Ubuntu; then
     HANDLE=twistedumbrella
     KERNELSPEC=~/android/Tuna_JB_pre1
-    KERNELREPO=~/android
+    ANDROIDREPO=~/Dropbox/TwistedServer/Playground
     MKBOOTIMG=$KERNELSPEC/buildImg
     TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin/arm-eabi-
 
@@ -29,10 +29,14 @@ if cat /etc/issue | grep Ubuntu; then
 else
     HANDLE=TwistedZero
     KERNELSPEC=/Volumes/android/Tuna_JB_pre1
-    KERNELREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground/kernels
+    ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
     MKBOOTIMG=$KERNELSPEC/buildImg
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
+    PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 fi
+
+KERNELREPO=$ANDROIDREPO/kernels
+GOOSERVER=loungekatt@upload.goo.im:public_html
 
 zipfile=$HANDLE"_StarKissed-JB42X.zip"
 
@@ -90,7 +94,14 @@ rm *.zip
 zip -r $zipfile *
 cp -R $KERNELSPEC/francoAIR/$zipfile $KERNELREPO/$zipfile
 
-cd $KERNELSPEC
-git commit -a -m "Compile success: Update build configuration defaults"
+export KENRELZIP="StarKissed-JB42X_$PUNCHCARD.zip"
+if [ -e $KERNELREPO/TwistedZero_StarKissed-JB42X.zip ]; then
+cp -R $KERNELREPO/TwistedZero_StarKissed-JB42X.zip $KERNELREPO/gooserver/$KENRELZIP
+scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
+rm -r $KERNELREPO/gooserver/*
+fi
+
+# cd $KERNELSPEC
+# git commit -a -m "Compile success: Update build configuration defaults"
 
 fi
