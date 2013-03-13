@@ -35,16 +35,27 @@ else
     PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 fi
 
+echo "Dual Boot Image: "
+read dualboot
+
+if [ $dualboot == "y" ]; then
+    zipfile=$HANDLE"_StarKissed-JB42X-Dual.zip"
+    KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Dual.zip"
+    KERNELDIR="dualBoot"
+    cp -R config/ubuntu_config .config
+else
+    zipfile=$HANDLE"_StarKissed-JB42X-Base.zip"
+    KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Base.zip"
+    KERNELDIR="francoAIR"
+    cp -R config/$2_config .config
+fi
+
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
-
-zipfile=$HANDLE"_StarKissed-JB42X.zip"
 
 CPU_JOB_NUM=8
 
 cd $KERNELSPEC
-
-cp -R config/$2_config .config
 
 make clean -j$CPU_JOB_NUM 
 
@@ -52,51 +63,54 @@ make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 
 if [ -e arch/arm/boot/zImage ]; then
 
-cp -R .config arch/arm/configs/starkissed_defconfig
+if [ $dualboot == "y" ]; then
+    cp -R .config arch/arm/configs/dualkissed_defconfig
+else
+    cp -R .config arch/arm/configs/starkissed_defconfig
+fi
 
 if [ `find . -name "*.ko" | grep -c ko` > 0 ]; then
 
 find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
 
-if [ ! -e $KERNELSPEC/francoAIR/system ]; then
-mkdir $KERNELSPEC/francoAIR/system
+if [ ! -e $KERNELSPEC/$KERNELDIR/system ]; then
+mkdir $KERNELSPEC/$KERNELDIR/system
 fi
-if [ ! -e $KERNELSPEC/francoAIR/system/lib ]; then
-mkdir $KERNELSPEC/francoAIR/system/lib
+if [ ! -e $KERNELSPEC/$KERNELDIR/system/lib ]; then
+mkdir $KERNELSPEC/$KERNELDIR/system/lib
 fi
-if [ ! -e $KERNELSPEC/francoAIR/system/lib/modules ]; then
-mkdir $KERNELSPEC/francoAIR/system/lib/modules
+if [ ! -e $KERNELSPEC/$KERNELDIR/system/lib/modules ]; then
+mkdir $KERNELSPEC/$KERNELDIR/system/lib/modules
 else
-rm -r $KERNELSPEC/francoAIR/system/lib/modules
-mkdir $KERNELSPEC/francoAIR/system/lib/modules
+rm -r $KERNELSPEC/$KERNELDIR/system/lib/modules
+mkdir $KERNELSPEC/$KERNELDIR/system/lib/modules
 fi
 
 for j in $(find . -name "*.ko"); do
-cp -R "${j}" $KERNELSPEC/francoAIR/system/lib/modules
+cp -R "${j}" $KERNELSPEC/$KERNELDIR/system/lib/modules
 done
 
 else
 
-if [ -e $KERNELSPEC/francoAIR/system/lib ]; then
-rm -r $KERNELSPEC/francoAIR/system/lib
+if [ -e $KERNELSPEC/$KERNELDIR/system/lib ]; then
+rm -r $KERNELSPEC/$KERNELDIR/system/lib
 fi
 
 fi
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
 cd $MKBOOTIMG
-./img.sh
+./img.sh $dualboot
 
 echo "building kernel package"
-cp -R boot.img ../francoAIR
-cd ../francoAIR
+cp -R boot.img ../$KERNELDIR
+cd ../$KERNELDIR
 rm *.zip
 zip -r $zipfile *
-cp -R $KERNELSPEC/francoAIR/$zipfile $KERNELREPO/$zipfile
+cp -R $KERNELSPEC/$KERNELDIR/$zipfile $KERNELREPO/$zipfile
 
-export KENRELZIP="StarKissed-JB42X_$PUNCHCARD.zip"
-if [ -e $KERNELREPO/TwistedZero_StarKissed-JB42X.zip ]; then
-cp -R $KERNELREPO/TwistedZero_StarKissed-JB42X.zip $KERNELREPO/gooserver/$KENRELZIP
+if [ -e $KERNELREPO/$zipfile ]; then
+cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
 scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
 rm -r $KERNELREPO/gooserver/*
 fi

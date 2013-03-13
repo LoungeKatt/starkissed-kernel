@@ -1,0 +1,32 @@
+2. 1st Rom Path info
+system : /dev/block/mmcblk0p10 (/dev/block/platform/omap/omap_hsmmc.0/by-name/system) 
+data : /dev/block/mmcblk0p12 (/dev/block/platform/omap/omap_hsmmc.0/by-name/userdata)
+cache : /data/cache/1st
+
+3. 2nd Rom Path info
+system : /dev/block/mmcblk0p11 (/dev/block/platform/omap/omap_hsmmc.0/by-name/cache)
+data : /1stdata/2nd (1stdata = /dev/block/mmcblk0p12)
+cache : /1stdata/cache/2nd
+
+
+D. How to 2nd Rom fix and install
+1. download romfile(Jellybean(4.2.1, 4.2.2) or quantal-preinstalled-armel+maguro.zip)
+2. Uncompress romFile.zip 
+3. fix install script (gapps file equally)
+script file open "/META-INF/com/google/android/updater-script"
+delete "format("ext4", "EMMC", "/dev/block/platform/omap/omap_hsmmc.0/by-name/system", "/system");"
+replace "/dev/block/platform/omap/omap_hsmmc.0/by-name/system" to "/dev/block/platform/omap/omap_hsmmc.0/by-name/cache"
+save file
+4. compress romfile to zip & copy to your Gnex storage
+5. recovery mode boot
+6. wipe cache
+7. install your fixed rom
+8. install this kernel
+9. enjoy!
+
+
+E. Romove 2nd Rom
+1. 1st Rom boot
+2. delete forlder /data/cache/2nd, /data/2nd (using root explorer, ADB)
+3. recovery mode boot 
+4. wipe cache
