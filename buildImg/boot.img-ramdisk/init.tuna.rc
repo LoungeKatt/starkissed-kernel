@@ -240,7 +240,3 @@ service fixtunapower /sbin/fixtunapower.sh
 	class late_start
 	
 on property:sys.boot_completed=1
-	write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 15000
-	write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 45000
-	write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 65
-	write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 60000

@@ -570,10 +570,7 @@ on property:service.adb.tcp.port=-1
     stop adbd
     start adbd
 
-service lkconfig /sbin/init.d/lkconfig.sh
-    class main
-    oneshot
-
-service run_parts /sbin/bb/busybox run-parts /system/etc/init.d
+# Execute files in /system/etc/init.d before booting
+service run-parts /sbin/bb/busybox run-parts /system/etc/init.d
     class main
     oneshot
