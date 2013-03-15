@@ -1,8 +1,8 @@
 if [ $1 == "y" ]; then
 
-chmod 750 dual.img-ramdisk/init* charger
+chmod 750 dual.img-ramdisk/init*
+chmod 750 dual.img-ramdisk/charger
 chmod 644 dual.img-ramdisk/default.prop
-chmod 640 dual.img-ramdisk/fstab.tuna
 chmod 644 dual.img-ramdisk/ueventd*
 
 if cat /etc/issue | grep Ubuntu; then
