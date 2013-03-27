@@ -9,8 +9,8 @@ PROPER=`echo $2 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 if cat /etc/issue | grep Ubuntu; then
     HANDLE=twistedumbrella
     KERNELSPEC=~/android/Tuna_JB_pre1
+UBOOTSPEC=~/android/uboot-tuna
     ANDROIDREPO=~/Dropbox/TwistedServer/Playground
-    MKBOOTIMG=$KERNELSPEC/buildImg
     TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin/arm-eabi-
 
     cd $KERNELSPEC/mkboot
@@ -29,13 +29,13 @@ if cat /etc/issue | grep Ubuntu; then
 else
     HANDLE=TwistedZero
     KERNELSPEC=/Volumes/android/Tuna_JB_pre1
-    ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
-    MKBOOTIMG=$KERNELSPEC/buildImg
+UBOOTSPEC=/Volumes/android/uboot-tuna
+ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
     PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 fi
 
-echo "Dual Boot Image: "
+echo -n "Dual Boot Image: "
 read dualboot
 
 if [ $dualboot == "y" ]; then
@@ -50,6 +50,7 @@ else
     cp -R config/$2_config .config
 fi
 
+MKBOOTIMG=$KERNELSPEC/buildImg
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
@@ -73,6 +74,23 @@ if [ `find . -name "*.ko" | grep -c ko` > 0 ]; then
 
 find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
 
+if [ $dualboot == "u" ]; then
+
+if [ ! -e $UBOOTSPEC/dualBoot/system ]; then
+mkdir $UBOOTSPEC/dualBoot/system
+fi
+if [ ! -e $UBOOTSPEC/dualBoot/system/lib ]; then
+mkdir $UBOOTSPEC/dualBoot/system/lib
+fi
+if [ ! -e $UBOOTSPEC/dualBoot/system/lib/modules ]; then
+mkdir $UBOOTSPEC/dualBoot/system/lib/modules
+else
+rm -r $UBOOTSPEC/dualBoot/system/lib/modules
+mkdir $UBOOTSPEC/dualBoot/system/lib/modules
+fi
+
+else
+
 if [ ! -e $KERNELSPEC/$KERNELDIR/system ]; then
 mkdir $KERNELSPEC/$KERNELDIR/system
 fi
@@ -86,9 +104,23 @@ rm -r $KERNELSPEC/$KERNELDIR/system/lib/modules
 mkdir $KERNELSPEC/$KERNELDIR/system/lib/modules
 fi
 
+fi
+
 for j in $(find . -name "*.ko"); do
+if [ $dualboot == "u" ]; then
+cp -R "${j}" $UBOOTSPEC/dualBoot/system/lib/modules
+else
 cp -R "${j}" $KERNELSPEC/$KERNELDIR/system/lib/modules
+fi
 done
+
+else
+
+if [ $dualboot == "u" ]; then
+
+if [ -e $UBOOTSPEC/dualBoot/system/lib ]; then
+rm -r $UBOOTSPEC/dualBoot/system/lib
+fi
 
 else
 
@@ -97,6 +129,18 @@ rm -r $KERNELSPEC/$KERNELDIR/system/lib
 fi
 
 fi
+
+fi
+
+if [ $dualboot == "u" ]; then
+
+cp -R arch/arm/boot/zImage $UBOOTSPEC/buildImg/kernels/default/zImage
+
+cd $UBOOTSPEC
+./buildKernel.sh
+
+else
+
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
 cd $MKBOOTIMG
@@ -115,7 +159,6 @@ scp -P 2222 $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/starkissed
 rm -r $KERNELREPO/gooserver/*
 fi
 
-# cd $KERNELSPEC
-# git commit -a -m "Compile success: Update build configuration defaults"
+fi
 
 fi

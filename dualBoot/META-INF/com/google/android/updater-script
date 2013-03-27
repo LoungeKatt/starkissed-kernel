@@ -2,7 +2,7 @@ ui_print(" ");
 ui_print("===============================================");
 ui_print("|                                             |");
 ui_print("|        Galaxy Nexus StarKissed Kernel       |");
-ui_print("|              for 4.0.x / 4.1.x              |");
+ui_print("|              for 4.2.x / Ubuntu             |");
 ui_print("|         sourced from r_data, franco         |");
 ui_print("|         imoseyon, & twistedumbrella         |");
 ui_print("|                                             |");
