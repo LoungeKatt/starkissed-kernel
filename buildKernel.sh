@@ -59,6 +59,7 @@ else
 fi
 
 MKBOOTIMG=$KERNELSPEC/buildImg
+UBOOTKERN=buildImg/kernels/default
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
@@ -144,7 +145,7 @@ fi
 
 if [ $dualboot == "u" ]; then
 
-cp -R arch/arm/boot/zImage $UBOOTSPEC/buildImg/kernels/default/zImage
+cp -R arch/arm/boot/zImage $UBOOTSPEC/$UBOOTKERN/zImage
 
 cd $UBOOTSPEC
 ./buildKernel.sh

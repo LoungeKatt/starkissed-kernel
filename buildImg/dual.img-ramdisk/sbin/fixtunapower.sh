@@ -1,34 +1,31 @@
-#!/system/bin/sh
-bb="/sbin/bb/busybox"
+#!/bin/busybox ash
+bb="/bin/busybox"
 
 $bb mount -o rw,remount /system
-$bb [ -f /system/lib/hw/power.tuna.so.fkbak ] || $bb cp /system/lib/hw/power.tuna.so /system/lib/hw/power.tuna.so.fkbak
-$bb cp /sbin/power.tuna.so /system/lib/hw/
+
+if $bb [ ! -d /system/etc/init.d ]; then
+ $bb echo "Making Init.d Directory ..."
+ $bb mkdir /system/etc/init.d
+ $bb chmod 777 /system/etc/init.d
+else
+ $bb echo "Init.d Directory Exist ..."
+fi
+
+if $bb [ ! -d /data/ak/backup ]; then
+ $bb echo "Making Backup Directory ..."
+ $bb mkdir /data/ak/backup
+ $bb chmod 777 /data/ak/backup
+else
+ $bb echo "Backup Directory Exist ..."
+fi
+
+if [ ! -e /system/lib/hw/power.tuna.so.bak ]; then
+ $bb cp /system/lib/hw/power.tuna.so /system/lib/hw/power.tuna.so.bak
+fi
+
+$bb rm -rf /system/lib/hw/power.tuna.so
+$bb cp /sbin/power.tuna.so /system/lib/hw
 $bb chmod 644 /system/lib/hw/power.tuna.so
+$bb chmod 644 /system/lib/hw/power.tuna.so.bak
+
 $bb mount -o ro,remount /system
-
-echo "0" > /sys/module/wakelock/parameters/debug_mask
-echo "0" > /sys/module/userwakelock/parameters/debug_mask
-echo "0" > /sys/module/earlysuspend/parameters/debug_mask
-echo "0" > /sys/module/alarm/parameters/debug_mask
-echo "0" > /sys/module/alarm_dev/parameters/debug_mask
-echo "0" > /sys/module/binder/parameters/debug_mask
-
-# initialize the devices
-#echo 512000 > /sys/block/zram0/disksize
-
-# Creating swap filesystems
-#$bb mkswap /dev/block/zram0
-
-# Switch the swaps on
-#$bb swapon -p 60 /dev/block/zram0
-
-#$bb mkswap /sdcard/swap/swapfile.swp
-#$bb mknod -m640 /dev/block/loop50 b 7 50
-#$bb losetup /dev/block/loop50 /sdcard/swap/swapfile.swp
-#$bb swapon /dev/block/loop50
-
-sleep 60
-pid=`pidof com.android.launcher`
-echo "-17" > /proc/$pid/oom_adj
-chmod 100 /proc/$pid/oom_adj

@@ -506,11 +506,6 @@ service mdnsd /system/bin/mdnsd
     disabled
     oneshot
 
-# Execute files in /system/etc/init.d before booting
-service run-parts /sbin/bb/busybox run-parts /system/etc/init.d
-    class main
-    oneshot
-
 service sensorservice /system/bin/sensorservice
     class main
     user system

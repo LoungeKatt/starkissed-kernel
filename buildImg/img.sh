@@ -1,13 +1,29 @@
+if cat /etc/issue | grep Ubuntu; then
+
+BUILDSTRUCT=linux
+
+else
+
+BUILDSTRUCT=darwin
+
+fi
+
 if [ $1 == "y" ]; then
 
 RAMDISK="dual.img-ramdisk"
 
-chmod 750 dual.img-ramdisk/init*
-chmod 750 dual.img-ramdisk/charger
-chmod 644 dual.img-ramdisk/default.prop
-chmod 644 dual.img-ramdisk/ueventd*
+cd $RAMDISK
+chmod 750 init* charger
+chmod 644 default.prop
+chmod 640 fstab.tuna
+chmod 644 ueventd*
+find . | cpio -o -H newc | gzip > ../newramdisk.cpio.gz
+cd ../
+$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
 
-elif [ $2 == "y" ]; then
+else
+
+if [ $2 == "y" ]; then
 
 RAMDISK="legacy41-ramdisk"
 
@@ -17,10 +33,7 @@ RAMDISK="boot.img-ramdisk"
 
 fi
 
-if cat /etc/issue | grep Ubuntu; then
-    linux/./mkbootfs $RAMDISK | gzip > newramdisk.cpio.gz
-    linux/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
-else
-    darwin/./mkbootfs $RAMDISK| gzip > newramdisk.cpio.gz
-    darwin/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
+$BUILDSTRUCT/./mkbootfs $RAMDISK | gzip > newramdisk.cpio.gz
+$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
+
 fi
