@@ -9,7 +9,7 @@ PROPER=`echo $2 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 if cat /etc/issue | grep Ubuntu; then
     HANDLE=twistedumbrella
     KERNELSPEC=~/android/Tuna_JB_pre1
-UBOOTSPEC=~/android/uboot-tuna
+    UBOOTSPEC=~/android/uboot-tuna
     ANDROIDREPO=~/Dropbox/TwistedServer/Playground
     TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin/arm-eabi-
 
@@ -29,8 +29,8 @@ UBOOTSPEC=~/android/uboot-tuna
 else
     HANDLE=TwistedZero
     KERNELSPEC=/Volumes/android/Tuna_JB_pre1
-UBOOTSPEC=/Volumes/android/uboot-tuna
-ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
+    UBOOTSPEC=/Volumes/android/uboot-tuna
+    ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
     PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 fi
@@ -43,6 +43,14 @@ if [ $dualboot == "y" ]; then
     KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Dual.zip"
     KERNELDIR="dualBoot"
     cp -R config/ubuntu_config .config
+
+elif [ $1 == "0" ]; then
+
+    zipfile=$HANDLE"_StarKissed-JB401-Base.zip"
+    KENRELZIP="StarKissed-JB401_$PUNCHCARD-Base.zip"
+    KERNELDIR="legacySKU"
+    cp -R config/legacy_config .config
+
 else
     zipfile=$HANDLE"_StarKissed-JB42X-Base.zip"
     KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Base.zip"
@@ -66,6 +74,8 @@ if [ -e arch/arm/boot/zImage ]; then
 
 if [ $dualboot == "y" ]; then
     cp -R .config arch/arm/configs/dualkissed_defconfig
+elif [ $1 == "0" ]; then
+    cp -R .config arch/arm/configs/starkissed_legacyfig
 else
     cp -R .config arch/arm/configs/starkissed_defconfig
 fi
@@ -144,7 +154,7 @@ else
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
 cd $MKBOOTIMG
-./img.sh $dualboot
+./img.sh $dualboot $1
 
 echo "building kernel package"
 cp -R boot.img ../$KERNELDIR

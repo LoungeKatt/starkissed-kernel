@@ -1,0 +1,37 @@
+ui_print(" ");
+ui_print("===============================================");
+ui_print("|                                             |");
+ui_print("|         Galaxy Nexus francoAIR Kernel       |");
+ui_print("|              for 4.0.x / 4.1.x              |");
+ui_print("|         sourced from r_data, franco         |");
+ui_print("|         imoseyon, & twistedumbrella         |");
+ui_print("|                                             |");
+ui_print("===============================================");
+ui_print(" ");
+
+ui_print(">>> Mounting /system /data ...");
+run_program("/sbin/busybox", "mount", "/system");
+run_program("/sbin/busybox", "mount", "/data");
+ui_print(" ");
+
+ui_print(">>> Cleaning ...");
+package_extract_dir("cleaner", "/tmp");
+package_extract_dir("system", "/system");
+set_perm(0, 0, 0777, "/tmp/cleaner.sh");
+set_perm(0, 0, 0644, "/system/lib/hw/power.tuna.so");
+run_program("/tmp/cleaner.sh");
+ui_print(" ");
+
+ui_print(">>> Unmounting /system /data ...");
+run_program("/sbin/busybox", "umount", "/system");
+run_program("/sbin/busybox", "umount", "/data");
+ui_print(" ");
+
+ui_print(">>> Installing Kernel...");
+package_extract_file("boot.img", "/tmp/boot.img");
+set_perm(0, 0, 0777, "/tmp/boot.img");
+run_program("/sbin/busybox", "dd", "if=/tmp/boot.img", "of=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot");
+ui_print(" ");
+
+ui_print(">>> Done!");
+ui_print(" ");
