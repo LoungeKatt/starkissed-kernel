@@ -34,6 +34,6 @@ RAMDISK="boot.img-ramdisk"
 fi
 
 $BUILDSTRUCT/./mkbootfs $RAMDISK | gzip > newramdisk.cpio.gz
-$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
+$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1' --kernel zImage --ramdisk newramdisk.cpio.gz -o $3.img
 
 fi

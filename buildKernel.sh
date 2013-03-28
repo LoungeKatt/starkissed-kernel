@@ -6,6 +6,9 @@
 
 PROPER=`echo $2 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 
+echo -n "Dual Boot Image: "
+read dualboot
+
 if cat /etc/issue | grep Ubuntu; then
     HANDLE=twistedumbrella
     KERNELSPEC=~/android/Tuna_JB_pre1
@@ -35,36 +38,9 @@ else
     PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 fi
 
-echo -n "Dual Boot Image: "
-read dualboot
-
-if [ $dualboot == "y" ]; then
-    zipfile=$HANDLE"_StarKissed-JB42X-Dual.zip"
-    KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Dual.zip"
-    KERNELDIR="dualBoot"
-    cp -R config/ubuntu_config .config
-
-elif [ $dualboot == "u" ]; then
-
-    KERNELDIR="dualBoot"
-    cp -R config/ubuntu_config .config
-
-elif [ $1 == "0" ]; then
-
-    zipfile=$HANDLE"_StarKissed-JB401-Base.zip"
-    KENRELZIP="StarKissed-JB401_$PUNCHCARD-Base.zip"
-    KERNELDIR="legacySKU"
-    cp -R config/legacy_config .config
-
-else
-    zipfile=$HANDLE"_StarKissed-JB42X-Base.zip"
-    KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Base.zip"
-    KERNELDIR="francoAIR"
-    cp -R config/$2_config .config
-fi
-
 MKBOOTIMG=$KERNELSPEC/buildImg
-UBOOTKERN=buildImg/kernels/default
+UBOOTKERN=buildImg/kernels/current
+UBOOTBACK=buildImg/kernels/legacy
 KERNELREPO=$ANDROIDREPO/kernels
 GOOSERVER=loungekatt@upload.goo.im:public_html
 
@@ -72,7 +48,70 @@ CPU_JOB_NUM=8
 
 cd $KERNELSPEC
 
-make clean -j$CPU_JOB_NUM 
+if [ $dualboot == "u" ]; then
+
+cp -R config/$2_config .config
+
+make clean -j$CPU_JOB_NUM
+
+make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
+
+if [ -e arch/arm/boot/zImage ]; then
+
+cd $MKBOOTIMG
+./img.sh $dualboot "n" "current"
+
+if [ -e current.img ]; then
+scp -P 2222 curren.img  $GOOSERVER/uBootRepo
+fi
+
+fi
+
+cd ../
+
+cp -R config/legacy_config .config
+
+make clean -j$CPU_JOB_NUM
+
+make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
+
+if [ -e arch/arm/boot/zImage ]; then
+
+cd $MKBOOTIMG
+./img.sh $dualboot "y" "legacy"
+
+if [ -e legacy.img ]; then
+scp -P 2222 legacy.img  $GOOSERVER/uBootRepo
+fi
+
+fi
+
+cd $UBOOTSPEC
+./buildKernel.sh
+
+else
+
+if [ $dualboot == "y" ]; then
+zipfile=$HANDLE"_StarKissed-JB42X-Dual.zip"
+KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Dual.zip"
+KERNELDIR="dualBoot"
+cp -R config/ubuntu_config .config
+
+elif [ $1 == "0" ]; then
+
+zipfile=$HANDLE"_StarKissed-JB401-Base.zip"
+KENRELZIP="StarKissed-JB401_$PUNCHCARD-Base.zip"
+KERNELDIR="legacySKU"
+cp -R config/legacy_config .config
+
+else
+zipfile=$HANDLE"_StarKissed-JB42X-Base.zip"
+KENRELZIP="StarKissed-JB42X_$PUNCHCARD-Base.zip"
+KERNELDIR="francoAIR"
+cp -R config/$2_config .config
+fi
+
+make clean -j$CPU_JOB_NUM
 
 make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 
@@ -90,22 +129,6 @@ if [ `find . -name "*.ko" | grep -c ko` > 0 ]; then
 
 find . -name "*.ko" | xargs ${TOOLCHAIN_PREFIX}strip --strip-unneeded
 
-if [ $dualboot == "u" ]; then
-
-if [ ! -e $UBOOTSPEC/dualBoot/system ]; then
-mkdir $UBOOTSPEC/dualBoot/system
-fi
-if [ ! -e $UBOOTSPEC/dualBoot/system/lib ]; then
-mkdir $UBOOTSPEC/dualBoot/system/lib
-fi
-if [ ! -e $UBOOTSPEC/dualBoot/system/lib/modules ]; then
-mkdir $UBOOTSPEC/dualBoot/system/lib/modules
-else
-rm -r $UBOOTSPEC/dualBoot/system/lib/modules
-mkdir $UBOOTSPEC/dualBoot/system/lib/modules
-fi
-
-else
 
 if [ ! -e $KERNELSPEC/$KERNELDIR/system ]; then
 mkdir $KERNELSPEC/$KERNELDIR/system
@@ -120,23 +143,9 @@ rm -r $KERNELSPEC/$KERNELDIR/system/lib/modules
 mkdir $KERNELSPEC/$KERNELDIR/system/lib/modules
 fi
 
-fi
-
 for j in $(find . -name "*.ko"); do
-if [ $dualboot == "u" ]; then
-cp -R "${j}" $UBOOTSPEC/dualBoot/system/lib/modules
-else
 cp -R "${j}" $KERNELSPEC/$KERNELDIR/system/lib/modules
-fi
 done
-
-else
-
-if [ $dualboot == "u" ]; then
-
-if [ -e $UBOOTSPEC/dualBoot/system/lib ]; then
-rm -r $UBOOTSPEC/dualBoot/system/lib
-fi
 
 else
 
@@ -146,21 +155,10 @@ fi
 
 fi
 
-fi
-
-if [ $dualboot == "u" ]; then
-
-cp -R arch/arm/boot/zImage $UBOOTSPEC/$UBOOTKERN/zImage
-
-cd $UBOOTSPEC
-./buildKernel.sh
-
-else
-
 cp -R arch/arm/boot/zImage $MKBOOTIMG
 
 cd $MKBOOTIMG
-./img.sh $dualboot $1
+./img.sh $dualboot $1 "boot"
 
 echo "building kernel package"
 cp -R boot.img ../$KERNELDIR
