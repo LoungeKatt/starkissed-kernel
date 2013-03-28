@@ -44,6 +44,11 @@ if [ $dualboot == "y" ]; then
     KERNELDIR="dualBoot"
     cp -R config/ubuntu_config .config
 
+elif [ $dualboot == "u" ]; then
+
+    KERNELDIR="dualBoot"
+    cp -R config/ubuntu_config .config
+
 elif [ $1 == "0" ]; then
 
     zipfile=$HANDLE"_StarKissed-JB401-Base.zip"
