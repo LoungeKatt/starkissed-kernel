@@ -1,7 +1,6 @@
 #!/sbin/sh
 
-# clean cache and dalvik-cache
-rm -rf /cache/*
+# clean dalvik-cache
 rm -rf /data/dalvik-cache/*
 
 # clean modules
