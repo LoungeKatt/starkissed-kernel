@@ -62,7 +62,8 @@ cd $MKBOOTIMG
 ./img.sh $dualboot "n" "current"
 
 if [ -e current.img ]; then
-scp -P 2222 curren.img  $GOOSERVER/uBootRepo
+cp -R current.img $KERNELREPO/images/current.img
+scp -P 2222 current.img  $GOOSERVER/uBootRepo
 fi
 
 fi
@@ -81,6 +82,7 @@ cd $MKBOOTIMG
 ./img.sh $dualboot "y" "legacy"
 
 if [ -e legacy.img ]; then
+cp -R legacy.img $KERNELREPO/images/legacy.img
 scp -P 2222 legacy.img  $GOOSERVER/uBootRepo
 fi
 
@@ -165,6 +167,7 @@ cp -R boot.img ../$KERNELDIR
 cd ../$KERNELDIR
 rm *.zip
 zip -r $zipfile *
+cd ../
 cp -R $KERNELSPEC/$KERNELDIR/$zipfile $KERNELREPO/$zipfile
 
 if [ -e $KERNELREPO/$zipfile ]; then
