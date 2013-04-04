@@ -11,8 +11,8 @@ read dualboot
 
 if cat /etc/issue | grep Ubuntu; then
     HANDLE=twistedumbrella
-    KERNELSPEC=~/android/Tuna_JB_pre1
-    UBOOTSPEC=~/android/uboot-tuna
+    KERNELSPEC=~/android/starkissed-kernel
+    UBOOTSPEC=~/android/starkissed-uboot
     ANDROIDREPO=~/Dropbox/TwistedServer/Playground
     TOOLCHAIN_PREFIX=~/android/android-toolchain-eabi/bin/arm-eabi-
 
@@ -31,8 +31,8 @@ if cat /etc/issue | grep Ubuntu; then
 
 else
     HANDLE=TwistedZero
-    KERNELSPEC=/Volumes/android/Tuna_JB_pre1
-    UBOOTSPEC=/Volumes/android/uboot-tuna
+    KERNELSPEC=/Volumes/android/starkissed-kernel
+    UBOOTSPEC=/Volumes/android/starkissed-uboot
     ANDROIDREPO=/Users/TwistedZero/Public/Dropbox/TwistedServer/Playground
     TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi/bin/arm-eabi-
     PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`

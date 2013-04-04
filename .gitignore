@@ -87,3 +87,5 @@ boot.img
 *.zip
 
 0
+
+*.img

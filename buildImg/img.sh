@@ -19,7 +19,7 @@ chmod 640 fstab.tuna
 chmod 644 ueventd*
 find . | cpio -o -H newc | gzip > ../newramdisk.cpio.gz
 cd ../
-$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 mms_ts.panel_id=18' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
+$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend mms_ts.panel_id=18' --kernel zImage --ramdisk newramdisk.cpio.gz -o boot.img
 
 else
 
@@ -34,6 +34,6 @@ RAMDISK="boot.img-ramdisk"
 fi
 
 $BUILDSTRUCT/./mkbootfs $RAMDISK | gzip > newramdisk.cpio.gz
-$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend=1 mms_ts.panel_id=18' --kernel zImage --ramdisk newramdisk.cpio.gz -o $3.img
+$BUILDSTRUCT/./mkbootimg --cmdline 'no_console_suspend mms_ts.panel_id=18' --kernel zImage --ramdisk newramdisk.cpio.gz -o $3.img
 
 fi

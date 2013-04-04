@@ -489,7 +489,7 @@ CONFIG_ARM_FLUSH_CONSOLE_ON_RESTART=y
 # CONFIG_USE_OF is not set
 CONFIG_ZBOOT_ROM_TEXT=0
 CONFIG_ZBOOT_ROM_BSS=0
-CONFIG_CMDLINE="fbcon=map:0 mem=1G vmalloc=768M zcache omap_wdt.timer_margin=30 no_console_suspend=1"
+CONFIG_CMDLINE="fbcon=map:0 mem=1G vmalloc=768M zcache omap_wdt.timer_margin=30 no_console_suspend"
 # CONFIG_CMDLINE_FROM_BOOTLOADER is not set
 CONFIG_CMDLINE_FORCE=y
 CONFIG_CMDLINE_EXTEND=y
