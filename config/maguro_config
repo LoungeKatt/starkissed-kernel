@@ -31,6 +31,28 @@ CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
 CONFIG_HAVE_IRQ_WORK=y
 CONFIG_IRQ_WORK=y
 
+CONFIG_CMDLINE="console=ttyS0,115200 androidboot.console=ttyS0 fbcon=map:0 mem=1G vmalloc=768M omap_wdt.timer_margin=30 no_console_suspend mms_ts.panel_id=18"
+CONFIG_BOOT_PRINTK_DELAY=y
+CONFIG_CMDLINE_FORCE=y
+CONFIG_CMDLINE_EXTEND=y
+# CONFIG_VT is not set
+# CONFIG_VT_CONSOLE is not set
+# CONFIG_DUMMY_CONSOLE is not set
+# CONFIG_HW_CONSOLE is not set
+# CONFIG_CONSOLE_TRANSLATIONS is not set
+CONFIG_LOGO=y
+# CONFIG_LOGO_LINUX_VGA16 is not set
+CONFIG_LOGO_LINUX_CLUT224=y
+# CONFIG_LOGO_LINUX_MONO is not set
+# CONFIG_FRAMEBUFFER_CONSOLE is not set
+# CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY is not set
+# CONFIG_FRAMEBUFFER_CONSOLE_ROTATION is not set
+# CONFIG_FONTS is not set
+# CONFIG_FONT_4x6 is not set
+# CONFIG_FONT_6x11 is not set
+# CONFIG_FONT_8x8 is not set
+# CONFIG_FONT_8x16 is not set
+
 #
 # General setup
 #
@@ -1893,27 +1915,6 @@ CONFIG_DISPLAY_SUPPORT=y
 #
 # Console display driver support
 #
-CONFIG_CMDLINE="console=ttyS0,115200 androidboot.console=ttyS0 fbcon=map:0 mem=1G vmalloc=768M omap_wdt.timer_margin=30 no_console_suspend mms_ts.panel_id=18"
-CONFIG_BOOT_PRINTK_DELAY=y
-CONFIG_CMDLINE_FORCE=y
-CONFIG_CMDLINE_EXTEND=y
-# CONFIG_VT is not set
-# CONFIG_VT_CONSOLE is not set
-# CONFIG_DUMMY_CONSOLE is not set
-# CONFIG_HW_CONSOLE is not set
-# CONFIG_CONSOLE_TRANSLATIONS is not set
-CONFIG_LOGO=y
-# CONFIG_LOGO_LINUX_VGA16 is not set
-CONFIG_LOGO_LINUX_CLUT224=y
-# CONFIG_LOGO_LINUX_MONO is not set
-# CONFIG_FRAMEBUFFER_CONSOLE is not set
-# CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY is not set
-# CONFIG_FRAMEBUFFER_CONSOLE_ROTATION is not set
-# CONFIG_FONTS is not set
-# CONFIG_FONT_4x6 is not set
-# CONFIG_FONT_6x11 is not set
-# CONFIG_FONT_8x8 is not set
-# CONFIG_FONT_8x16 is not set
 CONFIG_SOUND=y
 # CONFIG_SOUND_OSS_CORE is not set
 CONFIG_SND=y
