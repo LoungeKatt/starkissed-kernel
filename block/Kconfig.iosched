@@ -89,8 +89,8 @@ config IOSCHED_VR
 	  Requests are chosen according to SSTF with a penalty of rev_penalty
 	  for switching head direction.
 
-config IOSCHED_SIO
-	tristate "Simple I/O scheduler"
+config IOSCHED_SIOPLUS
+	tristate "Simple I/O scheduler plus"
 	default y
 	---help---
 	  The Simple I/O scheduler is an extremely simple scheduler,
@@ -156,8 +156,8 @@ choice
 	config DEFAULT_BFQ
 		bool "BFQ" if IOSCHED_BFQ=y
 
-	config DEFAULT_SIO
-		bool "SIO" if IOSCHED_SIO=y
+	config DEFAULT_SIOPLUS
+		bool "SIOPLUS" if IOSCHED_ SIOPLUS=y
 
 	config DEFAULT_NOOP
 		bool "No-op"
@@ -177,7 +177,7 @@ config DEFAULT_IOSCHED
         default "zen" if DEFAULT_ZEN
 	default "cfq" if DEFAULT_CFQ
 	default "bfq" if DEFAULT_BFQ
-	default "sio" if DEFAULT_SIO
+	default "sioplus" if DEFAULT_SIOPLUS
 	default "noop" if DEFAULT_NOOP
 	default "vr" if DEFAULT_VR
 	default "fifo" if DEFAULT_FIFO
