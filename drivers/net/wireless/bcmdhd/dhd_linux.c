@@ -22,7 +22,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: dhd_linux.c 333885 2012-05-18 00:39:03Z $
+ * $Id: dhd_linux.c 352789 2012-08-24 00:01:33Z $
  */
 
 #include <typedefs.h>
@@ -42,8 +42,6 @@
 #include <linux/ethtool.h>
 #include <linux/fcntl.h>
 #include <linux/fs.h>
-#include <linux/moduleparam.h>
-#include <linux/module.h>
 
 #include <asm/uaccess.h>
 #include <asm/unaligned.h>
@@ -331,8 +329,20 @@ uint dhd_console_ms = 0;
 module_param(dhd_console_ms, uint, 0644);
 #endif /* defined(DHD_DEBUG) */
 
-/* ARP offload agent mode : Enable ARP Host Auto-Reply and ARP Peer Auto-Reply */
-uint dhd_arp_mode = 0xb;
+/* Control wifi power mode and suspend DTIM skipping during sleep
+ * /sys/module/bcmdhd/wifi_pm
+ * /sys/module/bcmdhd/dtim_skip_override
+ */
+#if defined(CONFIG_HAS_EARLYSUSPEND)
+uint wifi_pm = 0;
+module_param(wifi_pm, uint, 0644);
+
+uint dtim_skip_override = 0;
+module_param(dtim_skip_override, uint, 0644);
+#endif /* defined(CONFIG_HAS_EARLYSUSPEND) */
+
+/* ARP offload agent mode : enable ARP Peer Auto-Reply */
+uint dhd_arp_mode = ARP_OL_AGENT | ARP_OL_PEER_AUTO_REPLY;
 module_param(dhd_arp_mode, uint, 0);
 
 /* ARP offload enable */
@@ -572,7 +582,10 @@ int power_mode = PM_FAST;
 			 * each third DTIM for better power savings.  Note that
 			 * one side effect is a chance to miss BC/MC packet.
 			 */
-			bcn_li_dtim = dhd_get_dtim_skip(dhd);
+			if (dtim_skip_override == 0)
+				bcn_li_dtim = dhd_get_dtim_skip(dhd);
+			else
+				bcn_li_dtim = dtim_skip_override - 1;
 			bcm_mkiovar("bcn_li_dtim", (char *)&bcn_li_dtim,
 				4, iovbuf, sizeof(iovbuf));
 			dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
@@ -1046,7 +1059,7 @@ dhd_op_if(dhd_if_t *ifp)
 #endif
 			netif_stop_queue(ifp->net);
 			unregister_netdev(ifp->net);
-			ret = DHD_DEL_IF;
+			ret = DHD_DEL_IF;	/* Make sure the free_netdev() is called */
 
 #ifdef WL_CFG80211
 			if (dhd->dhd_state & DHD_ATTACH_STATE_CFG80211) {
@@ -1381,10 +1394,11 @@ dhd_start_xmit(struct sk_buff *skb, struct net_device *net)
 
 
 done:
-	if (ret)
+	if (ret) {
 		dhd->pub.dstats.tx_dropped++;
-	else
+	} else {
 		dhd->pub.tx_packets++;
+	}
 
 	DHD_OS_WAKE_UNLOCK(&dhd->pub);
 
@@ -2664,7 +2678,9 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 	}
 
 	sema_init(&dhd->proto_sem, 1);
+#ifdef DHDTHREAD
 	sema_init(&dhd->sdsem, 1);
+#endif
 
 #ifdef PROP_TXSTATUS
 	spin_lock_init(&dhd->wlfc_spinlock);
@@ -3241,6 +3257,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	setbit(eventmask, WLC_E_SET_SSID);
 	setbit(eventmask, WLC_E_PRUNE);
 	setbit(eventmask, WLC_E_AUTH);
+	setbit(eventmask, WLC_E_ASSOC);
 	setbit(eventmask, WLC_E_REASSOC);
 	setbit(eventmask, WLC_E_REASSOC_IND);
 	setbit(eventmask, WLC_E_DEAUTH);
@@ -3255,8 +3272,10 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	setbit(eventmask, WLC_E_MIC_ERROR);
 	setbit(eventmask, WLC_E_ASSOC_REQ_IE);
 	setbit(eventmask, WLC_E_ASSOC_RESP_IE);
+#ifndef WL_CFG80211
 	setbit(eventmask, WLC_E_PMKID_CACHE);
 	setbit(eventmask, WLC_E_TXFAIL);
+#endif
 	setbit(eventmask, WLC_E_JOIN_START);
 	setbit(eventmask, WLC_E_SCAN_COMPLETE);
 #ifdef WLMEDIA_HTSF
@@ -4366,6 +4385,13 @@ dhd_dev_reset(struct net_device *dev, uint8 flag)
 
 	dhd_info_t *dhd = *(dhd_info_t **)netdev_priv(dev);
 
+	if (flag == TRUE) {
+		/* Issue wl down command before resetting the chip */
+		if (dhd_wl_ioctl_cmd(&dhd->pub, WLC_DOWN, NULL, 0, TRUE, 0) < 0) {
+			DHD_TRACE(("%s: wl down failed\n", __FUNCTION__));
+		}
+	}
+
 	ret = dhd_bus_devreset(&dhd->pub, flag);
 	if (ret) {
 		DHD_ERROR(("%s: dhd_bus_devreset: %d\n", __FUNCTION__, ret));
@@ -4549,7 +4575,7 @@ static void dhd_hang_process(struct work_struct *work)
 		wl_iw_send_priv_event(dev, "HANG");
 #endif
 #if defined(WL_CFG80211)
-		wl_cfg80211_hang(dev, WLAN_REASON_UNSPECIFIED);
+		wl_cfg80211_hang(dev, WLAN_REASON_DRIVER_ERROR);
 #endif
 	}
 }
