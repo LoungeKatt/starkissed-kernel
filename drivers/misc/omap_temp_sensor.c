@@ -38,6 +38,8 @@
 #include <linux/slab.h>
 #include <linux/sysfs.h>
 #include <linux/types.h>
+#include <linux/module.h>
+#include <linux/moduleparam.h>
 
 #include <plat/common.h>
 #include <plat/omap-pm.h>
@@ -65,6 +67,8 @@ static void throttle_delayed_work_fn(struct work_struct *work);
 #define OMAP_ADC_START_VALUE	530
 #define OMAP_ADC_END_VALUE	923
 
+bool throttle_enabled = true;
+module_param(throttle_enabled, bool, 0755);
 #ifdef CONFIG_TEMP_CONTROL
 static int cold_threshold = BGAP_THRESHOLD_T_COLD;
 static int hot_threshold = BGAP_THRESHOLD_T_HOT;
@@ -420,11 +424,13 @@ static void throttle_delayed_work_fn(struct work_struct *work)
 #else
 	if (curr >= BGAP_THRESHOLD_T_HOT || curr < 0) {
 #endif
-		pr_warn("%s: OMAP temp read %d exceeds the threshold\n",
-			__func__, curr);
-		omap_thermal_throttle();
-		schedule_delayed_work(&temp_sensor->throttle_work,
-			msecs_to_jiffies(THROTTLE_DELAY_MS));
+        if (throttle_enabled) {
+            omap_thermal_throttle();
+        } else {
+            pr_info("[franciscofranco] %p - OMAP temp read %d exceeds the threshold but throttling is disabled.", __func__, curr);
+        }
+        schedule_delayed_work(&temp_sensor->throttle_work,
+            msecs_to_jiffies(THROTTLE_DELAY_MS));
 	} else {
 		schedule_delayed_work(&temp_sensor->throttle_work,
 			msecs_to_jiffies(THROTTLE_DELAY_MS));
@@ -460,16 +466,24 @@ static irqreturn_t omap_talert_irq_handler(int irq, void *data)
 	    & OMAP4_COLD_FLAG_MASK;
 	temp_offset = omap_temp_sensor_readl(temp_sensor, BGAP_CTRL_OFFSET);
 	if (t_hot) {
-		omap_thermal_throttle();
-		schedule_delayed_work(&temp_sensor->throttle_work,
-			msecs_to_jiffies(THROTTLE_DELAY_MS));
-		temp_offset &= ~(OMAP4_MASK_HOT_MASK);
-		temp_offset |= OMAP4_MASK_COLD_MASK;
+        if (throttle_enabled) {
+            omap_thermal_throttle();
+            schedule_delayed_work(&temp_sensor->throttle_work,
+                msecs_to_jiffies(THROTTLE_DELAY_MS));
+            temp_offset &= ~(OMAP4_MASK_HOT_MASK);
+            temp_offset |= OMAP4_MASK_COLD_MASK;
+        } else {
+            pr_info("[franciscofranco] %p - temperature is over the threshold, but throttling is disabled.", __func__);
+        }
 	} else if (t_cold) {
-		cancel_delayed_work_sync(&temp_sensor->throttle_work);
-		omap_thermal_unthrottle();
-		temp_offset &= ~(OMAP4_MASK_COLD_MASK);
-		temp_offset |= OMAP4_MASK_HOT_MASK;
+        if (throttle_enabled) {
+            cancel_delayed_work_sync(&temp_sensor->throttle_work);
+            omap_thermal_unthrottle();
+            temp_offset &= ~(OMAP4_MASK_COLD_MASK);
+            temp_offset |= OMAP4_MASK_HOT_MASK;
+        } else {
+            pr_info("[franciscofranco] %p - temperature is below the threshold, but throttling is disabled.", __func__);
+        }
 	}
 
 	omap_temp_sensor_writel(temp_sensor, temp_offset, BGAP_CTRL_OFFSET);
@@ -761,7 +775,7 @@ static struct platform_driver omap_temp_sensor_driver = {
 
 int __init omap_temp_sensor_init(void)
 {
-	if (!cpu_is_omap446x())
+	if (!cpu_is_omap446x() && !cpu_is_omap447x())
 		return 0;
 
 	return platform_driver_register(&omap_temp_sensor_driver);
