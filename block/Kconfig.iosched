@@ -157,7 +157,7 @@ choice
 		bool "BFQ" if IOSCHED_BFQ=y
 
 	config DEFAULT_SIOPLUS
-		bool "SIOPLUS" if IOSCHED_ SIOPLUS=y
+		bool "SIOPLUS" if IOSCHED_SIOPLUS=y
 
 	config DEFAULT_NOOP
 		bool "No-op"

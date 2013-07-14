@@ -31,7 +31,7 @@ CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
 CONFIG_HAVE_IRQ_WORK=y
 CONFIG_IRQ_WORK=y
 
-CONFIG_CMDLINE="console=ttyS0,115200 androidboot.console=ttyS0 fbcon=map:0 mem=1G vmalloc=768M omap_wdt.timer_margin=30 no_console_suspend mms_ts.panel_id=18"
+CONFIG_CMDLINE="console=ttyS0,115200 androidboot.console=ttyS0 fbcon=map:0 mem=1G vmalloc=768M omap_wdt.timer_margin=30 no_console_suspend=1 mms_ts.panel_id=18"
 CONFIG_BOOT_PRINTK_DELAY=y
 CONFIG_CMDLINE_FORCE=y
 CONFIG_CMDLINE_EXTEND=y
@@ -208,14 +208,14 @@ CONFIG_IOSCHED_CFQ=y
 CONFIG_IOSCHED_BFQ=y
 CONFIG_CGROUP_BFQIO=y
 CONFIG_IOSCHED_VR=y
-CONFIG_IOSCHED_SIO=y
+CONFIG_IOSCHED_SIOPLUS=y
 CONFIG_IOSCHED_FIFO=y
 # CONFIG_DEFAULT_DEADLINE is not set
 # CONFIG_DEFAULT_ROW is not set
 # CONFIG_DEFAULT_ZEN is not set
 # CONFIG_DEFAULT_CFQ is not set
 # CONFIG_DEFAULT_BFQ is not set
-# CONFIG_DEFAULT_SIO is not set
+# CONFIG_DEFAULT_SIOPLUS is not set
 # CONFIG_DEFAULT_NOOP is not set
 CONFIG_DEFAULT_VR=y
 # CONFIG_DEFAULT_FIFO is not set
@@ -1333,7 +1333,7 @@ CONFIG_WIFI_CONTROL_FUNC=y
 CONFIG_BCMDHD=y
 CONFIG_BCMDHD_FW_PATH="/system/vendor/firmware/fw_bcmdhd.bin"
 CONFIG_BCMDHD_NVRAM_PATH="/system/etc/wifi/bcmdhd.cal"
-CONFIG_SUPPORT_PM2_ONLY=y
+# CONFIG_SUPPORT_PM2_ONLY is not set
 # CONFIG_DHD_USE_STATIC_BUF is not set
 # CONFIG_DHD_USE_SCHED_SCAN is not set
 CONFIG_DHD_ENABLE_P2P=y
